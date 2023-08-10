@@ -23,6 +23,12 @@ const useCart = create(
           return toast('Item already in cart.');
         }
 
+        const checkItemUnit = Number(data.unit) === 0;
+
+        if (checkItemUnit) {
+          return toast.error('Item is out of stock.');
+        }
+
         set({ items: [...get().items, data] });
         toast.success('Item added to cart.');
       },

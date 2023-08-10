@@ -30,14 +30,23 @@ const Summary = () => {
   }, 0);
 
   const onCheckout = async () => {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
-      {
-        productIds: items.map((item) => item.id),
-      }
-    );
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
+        {
+          productIds: items.map((item) => item.id),
+        }
+      );
 
-    window.location = response.data.url;
+      // Redirect the user to the payment URL
+      window.location = response.data.url;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error('selected product is out of stock');
+      } else {
+        toast.error('An unknown error occurred');
+      }
+    }
   };
 
   return (
